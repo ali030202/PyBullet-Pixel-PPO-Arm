@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<robot name="planar_two_joint_arm">
+  <material name="arm_blue"><color rgba="0.12 0.48 0.78 1"/></material>
+  <material name="joint_dark"><color rgba="0.16 0.18 0.20 1"/></material>
+
+  <link name="base">
+    <inertial>
+      <origin xyz="0 0 0.025"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.025"/>
+      <geometry><cylinder radius="0.055" length="0.05"/></geometry>
+      <material name="joint_dark"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.025"/>
+      <geometry><cylinder radius="0.055" length="0.05"/></geometry>
+    </collision>
+  </link>
+
+  <link name="upper_arm">
+    <inertial>
+      <origin xyz="0.15 0 0"/>
+      <mass value="0.35"/>
+      <inertia ixx="0.0002" ixy="0" ixz="0" iyy="0.0027" iyz="0" izz="0.0027"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.15 0 0" rpy="0 1.5707963 0"/>
+      <geometry><cylinder radius="0.018" length="0.30"/></geometry>
+      <material name="arm_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0.15 0 0" rpy="0 1.5707963 0"/>
+      <geometry><cylinder radius="0.018" length="0.30"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="shoulder" type="revolute">
+    <parent link="base"/>
+    <child link="upper_arm"/>
+    <origin xyz="0 0 0.07" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.05" upper="3.05" effort="12" velocity="3.0"/>
+    <dynamics damping="0.08" friction="0.02"/>
+  </joint>
+
+  <link name="forearm">
+    <inertial>
+      <origin xyz="0.125 0 0"/>
+      <mass value="0.25"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0014" iyz="0" izz="0.0014"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.125 0 0" rpy="0 1.5707963 0"/>
+      <geometry><cylinder radius="0.015" length="0.25"/></geometry>
+      <material name="arm_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0.125 0 0" rpy="0 1.5707963 0"/>
+      <geometry><cylinder radius="0.015" length="0.25"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="elbow" type="revolute">
+    <parent link="upper_arm"/>
+    <child link="forearm"/>
+    <origin xyz="0.30 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.8" upper="2.8" effort="10" velocity="3.0"/>
+    <dynamics damping="0.08" friction="0.02"/>
+  </joint>
+
+  <link name="end_effector">
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="0.04"/>
+      <inertia ixx="0.00002" ixy="0" ixz="0" iyy="0.00002" iyz="0" izz="0.00002"/>
+    </inertial>
+    <visual>
+      <geometry><sphere radius="0.025"/></geometry>
+      <material name="joint_dark"/>
+    </visual>
+    <collision>
+      <geometry><sphere radius="0.025"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="tool_fixed" type="fixed">
+    <parent link="forearm"/>
+    <child link="end_effector"/>
+    <origin xyz="0.25 0 0" rpy="0 0 0"/>
+  </joint>
+</robot>
